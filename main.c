@@ -15,7 +15,7 @@ void render_board(int board[ROWS][COLUMNS]) {
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {
             if (board[y][x] == 0) {
-                mvprintw(y, x * 2, ". ");
+                mvprintw(y, x * 2, " .");
             } else {
                 mvprintw(y, x * 2, "[]");
             }
