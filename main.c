@@ -37,6 +37,7 @@ int main(void) {
     cbreak(); //Allow user input without return by disabling line buffering
     noecho(); //don't echo input characters
     keypad(stdscr, TRUE); //allow input with arrow keys
+    nodelay(stdscr, TRUE); //make getch non-blocking
 
     bool running = true;
 
@@ -44,9 +45,21 @@ int main(void) {
 
     //placing a block
     //board[5][5] = 1;
+    bool board_changed = true;
+
     while (running) {
-        render_board(board);
-        getch(); //not 100% sure what this does but used for now to pause for a second
+        if (board_changed) {
+            render_board(board);
+            board_changed = false; //reset the flag after rendering
+        }
+        int ch = getch();
+        // Press 'q' to quit the game
+        if (ch == 'q') {
+            running = false;
+        }
+        // Example: if you modify the board elsewhere, set board_changed = true;
+        // For demonstration, uncomment the next line to force a re-render every loop:
+        // board_changed = true;
     }
     endwin();
     return 0;
