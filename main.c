@@ -25,11 +25,22 @@ void render_board(int board[ROWS][COLUMNS]) {
 }
 
 int main(void) {
-    //initialise ncurses
-    initscr();
+    initscr(); //initialise ncurses
+    curs_set(0); //hides cursor
+    cbreak(); //Allow user input without return by disabling line buffering
+    noecho(); //don't echo input characters
+    keypad(stdscr, TRUE); //allow input with arrow keys
+
+    bool running = true;
+
     int board[ROWS][COLUMNS] = {0}; //initialise board array
-    render_board(board);
-    getch(); //not 100% sure what this does but used for now to pause for a second
+
+    //placing a block
+    //board[5][5] = 1;
+    while (running) {
+        render_board(board);
+        getch(); //not 100% sure what this does but used for now to pause for a second
+    }
     endwin();
     return 0;
 }
