@@ -29,6 +29,7 @@ int main(void) {
     initscr();
     int board[ROWS][COLUMNS] = {0}; //initialise board array
     render_board(board);
+    getch(); //not 100% sure what this does but used for now to pause for a second
     endwin();
     return 0;
 }
