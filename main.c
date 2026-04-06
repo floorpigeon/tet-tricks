@@ -8,8 +8,6 @@
 #define ROWS 20
 #define COLUMNS 10
 
-int board[ROWS][COLUMNS] = {0};
-
 void render_board(int board[ROWS][COLUMNS]) {
     //clear screen so old frames are not in the way
     erase();
@@ -29,5 +27,8 @@ void render_board(int board[ROWS][COLUMNS]) {
 int main(void) {
     //initialise ncurses
     initscr();
-    render_board[][];
+    int board[ROWS][COLUMNS] = {0}; //initialise board array
+    render_board(board);
+    endwin();
+    return 0;
 }
