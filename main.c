@@ -13,6 +13,7 @@ int board[ROWS][COLUMNS] = {0};
 void render_board(int board[ROWS][COLUMNS]) {
     //clear screen so old frames are not in the way
     erase();
+    //for loop to render columns and rows, checking whether cell has a value
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {
             if (board[y][x] == 0) {
@@ -22,5 +23,11 @@ void render_board(int board[ROWS][COLUMNS]) {
             }
         }
     }
-    refresh();
+    refresh(); //updates the screen
+}
+
+int main(void) {
+    //initialise ncurses
+    initscr();
+    render_board[][];
 }
