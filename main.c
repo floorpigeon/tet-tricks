@@ -8,6 +8,13 @@
 #define ROWS 20
 #define COLUMNS 10
 
+typedef struct {
+    int type; //type of piece (0-6 for the 7 tetrominoes)
+    int rotation; //rotation state (0-3)
+    int x; //x-axis position
+    int y; //y-axis position
+} Piece;
+
 void render_board(int board[ROWS][COLUMNS]) {
     //clear screen so old frames are not in the way
     erase();
