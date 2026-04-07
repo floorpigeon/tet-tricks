@@ -31,13 +31,37 @@ void render_board(int board[ROWS][COLUMNS]) {
     refresh(); //updates the screen
 }
 
+/*
+int pieces[7][4][4][4] = {
+    // Line piece
+    {
+        {{0, 1, 0, 0},
+         {0, 1, 0, 0},
+         {0, 1, 0, 0},
+         {0, 1, 0, 0}},
+        {{0, 0, 0, 0},
+         {1, 1, 1, 1},
+         {0, 0, 0, 0},
+         {0, 0, 0, 0}},
+        {{0, 0, 1, 0},
+         {0, 0, 1, 0},
+         {0, 0, 1, 0},
+         {0, 0, 1, 0}},
+        {{0, 0, 0, 0},
+         {0, 0, 0, 0},
+         {1, 1, 1, 1},
+         {0, 0, 0, 0}}
+    },
+}
+*/
+
 int main(void) {
     initscr(); //initialise ncurses
     curs_set(0); //hides cursor
     cbreak(); //Allow user input without return by disabling line buffering
     noecho(); //don't echo input characters
     keypad(stdscr, TRUE); //allow input with arrow keys
-    nodelay(stdscr, TRUE); //make getch non-blocking
+    nodelay(stdscr, TRUE); //make getch not block frame updates
 
     bool running = true;
 
