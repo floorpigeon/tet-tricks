@@ -18,6 +18,7 @@ typedef struct {
 void render_board(int board[ROWS][COLUMNS]) {
     //clear screen so old frames are not in the way
     erase();
+    //first, draw the existing board state
     //for loop to render columns and rows, checking whether cell has a value
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {
@@ -31,8 +32,7 @@ void render_board(int board[ROWS][COLUMNS]) {
     refresh(); //updates the screen
 }
 
-/*
-int pieces[7][4][4][4] = {
+int pieces[/*7*/1][4][4][4] = {
     // Line piece
     {
         {{0, 1, 0, 0},
@@ -52,8 +52,7 @@ int pieces[7][4][4][4] = {
          {1, 1, 1, 1},
          {0, 0, 0, 0}}
     },
-}
-*/
+};
 
 int main(void) {
     initscr(); //initialise ncurses
@@ -66,6 +65,7 @@ int main(void) {
     bool running = true;
 
     int board[ROWS][COLUMNS] = {0}; //initialise board array
+    Piece current_piece = {0, 0, COLUMNS / 2 - 1, 0}; //initialise piece in the middle top of the board
 
     //placing a block
     //board[5][5] = 1;
