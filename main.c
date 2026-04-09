@@ -202,6 +202,19 @@ int main(void) {
         if (ch == 'q') {
             running = false;
         }
+        if (ch == KEY_LEFT) {
+            current_piece.x--;
+            board_changed = true;
+        } else if (ch == KEY_RIGHT) {
+            current_piece.x++;
+            board_changed = true;
+        } else if (ch == KEY_DOWN) {
+            current_piece.y++;
+            board_changed = true;
+        } else if (ch == KEY_UP) { // Rotate right
+            current_piece.rotation = (current_piece.rotation + 1) % 4;
+            board_changed = true;
+        }
         // Example: if you modify the board elsewhere, set board_changed = true;
         // For demonstration, uncomment the next line to force a re-render every loop:
         // board_changed = true;
