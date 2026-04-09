@@ -33,7 +33,6 @@ void render_board(int board[ROWS][COLUMNS]) {
 }
 
 int pieces[/*7*/1][4][4][4] = {
-    // Line piece
     {
         {{0, 1, 0, 0},
          {0, 1, 0, 0},
