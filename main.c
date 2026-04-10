@@ -228,7 +228,6 @@ int main(void) {
         if (ch == 'q') {
             running = false;
         }
-        current_piece.type = rand() % 7;
         //Probably a more elegant way to do this, but for now just check each direction and rotation separately and update the piece position if there is no collision
         if (ch == KEY_LEFT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x - 1, current_piece.y})) {
             current_piece.x--;
@@ -257,6 +256,7 @@ int main(void) {
                 }
             }
             // Spawn a new piece at the top
+            current_piece.type = rand() % 7;
             current_piece.rotation = 0;
             current_piece.x = COLUMNS / 2 - 1;
             current_piece.y = 0;
