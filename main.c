@@ -4,7 +4,6 @@
 #include<sys/time.h>
 #include<stdbool.h>
 #include<ncurses.h>
-#include<unistd.h>
 
 #define ROWS 20
 #define COLUMNS 10
@@ -225,8 +224,6 @@ int main(void) {
             board_changed = true;
             last_move_time = current_time;
         }
-        
-        usleep(50000); // Small sleep to prevent CPU spinning
     }
     endwin();
     return 0;
