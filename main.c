@@ -4,6 +4,11 @@
 #include<sys/time.h>
 #include<stdbool.h>
 #include<ncurses.h>
+#ifdef _WIN32
+#include<windows.h>
+#else
+#include<unistd.h>
+#endif
 
 #define ROWS 20
 #define COLUMNS 10
@@ -224,6 +229,11 @@ int main(void) {
             board_changed = true;
             last_move_time = current_time;
         }
+        #ifdef _WIN32
+        Sleep(50); // Sleep for 50 milliseconds to reduce CPU usage
+        #else
+        usleep(50000); // Sleep for 50 milliseconds to reduce CPU usage
+        #endif
     }
     endwin();
     return 0;
