@@ -199,7 +199,6 @@ void render_board(int board[ROWS][COLUMNS], Piece current_piece) {
     refresh(); //updates the screen
 }
 
-
 int main(void) {
     initscr(); //initialise ncurses
     curs_set(0); //hides cursor
@@ -223,25 +222,7 @@ int main(void) {
             render_board(board, current_piece);
             board_changed = false; //reset the flag after rendering
         }
-        int ch = getch();
-        // Press 'q' to quit the game
-        if (ch == 'q') {
-            running = false;
-        }
-        //Probably a more elegant way to do this, but for now just check each direction and rotation separately and update the piece position if there is no collision
-        if (ch == KEY_LEFT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x - 1, current_piece.y})) {
-            current_piece.x--;
-            board_changed = true;
-        } else if (ch == KEY_RIGHT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x + 1, current_piece.y})) {
-            current_piece.x++;
-            board_changed = true;
-        } else if (ch == KEY_DOWN && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x, current_piece.y + 1})) {
-            current_piece.y++;
-            board_changed = true;
-        } else if (ch == KEY_UP && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x, current_piece.y})) { // Rotate right
-            current_piece.rotation = (current_piece.rotation + 1) % 4;
-            board_changed = true;
-        } else if (current_piece.y >= 0 && check_collision(board, current_piece)) {
+        else if (current_piece.y >= 0 && check_collision(board, current_piece)) {
             // If the piece collides immediately after moving down, it means it has landed
             // Place the piece on the board
             for (int py = 0; py < 4; py++) {
@@ -262,6 +243,25 @@ int main(void) {
             current_piece.y = 0;
             board_changed = true;
         }
+        int ch = getch();
+        // Press 'q' to quit the game
+        if (ch == 'q') {
+            running = false;
+        }
+        //Probably a more elegant way to do this, but for now just check each direction and rotation separately and update the piece position if there is no collision
+        if (ch == KEY_LEFT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x - 1, current_piece.y})) {
+            current_piece.x--;
+            board_changed = true;
+        } else if (ch == KEY_RIGHT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x + 1, current_piece.y})) {
+            current_piece.x++;
+            board_changed = true;
+        } else if (ch == KEY_DOWN && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x, current_piece.y + 1})) {
+            current_piece.y++;
+            board_changed = true;
+        } else if (ch == KEY_UP && !check_collision(board, (Piece){current_piece.type, (current_piece.rotation + 1) % 4, current_piece.x, current_piece.y})) { // Rotate right
+            current_piece.rotation = (current_piece.rotation + 1) % 4;
+            board_changed = true;
+        }
         
         // Move piece down periodically (every second)
         //Probably could do this with a timer instead of checking time every frame, but this is simpler for now
@@ -271,11 +271,11 @@ int main(void) {
             board_changed = true;
             last_move_time = current_time;
         }
-        /*#ifdef _WIN32 // Windows-specific sleep function
-        Sleep(50); // Sleep for 50 milliseconds to reduce CPU usage
+        #ifdef _WIN32 // Windows-specific sleep function
+        Sleep(1); // Sleep for 50 milliseconds to reduce CPU usage
         #else // POSIX-compliant sleep function
-        usleep(50000); // Sleep for 50 milliseconds to reduce CPU usage
-        #endif*/
+        usleep(1000); // Sleep for 50 milliseconds to reduce CPU usage
+        #endif
     }
     endwin();
     return 0;
