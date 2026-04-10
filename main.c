@@ -4,6 +4,7 @@
 #include<sys/time.h>
 #include<stdbool.h>
 #include<ncurses.h>
+#include<unistd.h>
 
 #define ROWS 20
 #define COLUMNS 10
@@ -191,7 +192,11 @@ int main(void) {
     //placing a block
     //board[5][5] = 1;
     bool board_changed = true;
-
+    while (running) {
+        current_piece.y++; // Move piece down if no collision
+        usleep(1000000); // Sleep to control frame rate
+        board_changed = true; // Set flag to indicate board has changed
+    }
     while (running) {
         if (board_changed) {
             render_board(board, current_piece);
