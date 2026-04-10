@@ -257,7 +257,6 @@ int main(void) {
                 }
             }
             // Spawn a new piece at the top
-            current_piece.type = rand() % 7;
             current_piece.rotation = 0;
             current_piece.x = COLUMNS / 2 - 1;
             current_piece.y = 0;
