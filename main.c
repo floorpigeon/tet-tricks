@@ -149,6 +149,26 @@ typedef struct {
     int y; //y-axis position
 } Piece;
 
+int check_collision(int board[ROWS][COLUMNS], Piece piece) {
+    for (int py = 0; py < 4; py++) {
+        for (int px = 0; px < 4; px++) {
+            if (pieces[piece.type][piece.rotation][py][px]) {
+                int board_x = piece.x + px;
+                int board_y = piece.y + py;
+                // Check boundaries
+                if (board_x < 0 || board_x >= COLUMNS || board_y < 0 || board_y >= ROWS) {
+                    return 1; // Collision with wall
+                }
+                // Check collision with existing pieces
+                if (board[board_y][board_x]) {
+                    return 1; // Collision with existing piece
+                }
+            }
+        }
+    }
+    return 0; // No collision
+}
+
 void render_board(int board[ROWS][COLUMNS], Piece current_piece) {
     //clear screen so old frames are not in the way
     erase();
@@ -197,6 +217,7 @@ int main(void) {
     //board[5][5] = 1;
     bool board_changed = true;
     time_t last_move_time = time(NULL);
+
     while (running) {
         if (board_changed) {
             render_board(board, current_piece);
@@ -207,17 +228,39 @@ int main(void) {
         if (ch == 'q') {
             running = false;
         }
-        if (ch == KEY_LEFT) {
+        current_piece.type = rand() % 7;
+        //Probably a more elegant way to do this, but for now just check each direction and rotation separately and update the piece position if there is no collision
+        if (ch == KEY_LEFT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x - 1, current_piece.y})) {
             current_piece.x--;
             board_changed = true;
-        } else if (ch == KEY_RIGHT) {
+        } else if (ch == KEY_RIGHT && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x + 1, current_piece.y})) {
             current_piece.x++;
             board_changed = true;
-        } else if (ch == KEY_DOWN) {
+        } else if (ch == KEY_DOWN && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x, current_piece.y + 1})) {
             current_piece.y++;
             board_changed = true;
-        } else if (ch == KEY_UP) { // Rotate right
+        } else if (ch == KEY_UP && !check_collision(board, (Piece){current_piece.type, current_piece.rotation, current_piece.x, current_piece.y})) { // Rotate right
             current_piece.rotation = (current_piece.rotation + 1) % 4;
+            board_changed = true;
+        } else if (current_piece.y >= 0 && check_collision(board, current_piece)) {
+            // If the piece collides immediately after moving down, it means it has landed
+            // Place the piece on the board
+            for (int py = 0; py < 4; py++) {
+                for (int px = 0; px < 4; px++) {
+                    if (pieces[current_piece.type][current_piece.rotation][py][px]) {
+                        int board_x = current_piece.x + px;
+                        int board_y = current_piece.y + py - 1; // Place piece one row above the collision point
+                        if (board_x >= 0 && board_x < COLUMNS && board_y >= 0 && board_y < ROWS) {
+                            board[board_y][board_x] = 1; // Mark the cell as occupied
+                        }
+                    }
+                }
+            }
+            // Spawn a new piece at the top
+            current_piece.type = rand() % 7;
+            current_piece.rotation = 0;
+            current_piece.x = COLUMNS / 2 - 1;
+            current_piece.y = 0;
             board_changed = true;
         }
         
@@ -229,11 +272,11 @@ int main(void) {
             board_changed = true;
             last_move_time = current_time;
         }
-        #ifdef _WIN32
+        /*#ifdef _WIN32 // Windows-specific sleep function
         Sleep(50); // Sleep for 50 milliseconds to reduce CPU usage
-        #else
+        #else // POSIX-compliant sleep function
         usleep(50000); // Sleep for 50 milliseconds to reduce CPU usage
-        #endif
+        #endif*/
     }
     endwin();
     return 0;
