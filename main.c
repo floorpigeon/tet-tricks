@@ -265,7 +265,6 @@ int main(void) {
         }
         
         // Move piece down periodically (every second)
-        //Probably could do this with a timer instead of checking time every frame, but this is simpler for now
         time_t current_time = time(NULL);
         if (current_time - last_move_time >= 1) {
             current_piece.y++;
