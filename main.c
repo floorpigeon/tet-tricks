@@ -133,8 +133,6 @@ int main(void)
     Piece current_piece = {rand() % 7, 0, COLUMNS / 2 - 1,
                            0}; // initialise piece in the middle top of the board
 
-    // placing a block
-    // board[5][5] = 1;
     bool board_changed = true;
     time_t last_move_time = time(NULL);
 
@@ -179,36 +177,18 @@ int main(void)
         {
             running = false;
         }
-        // Probably a more elegant way to do this, but for now just check each
-        // direction and rotation separately and update the piece position if
-        // there is no collision
-        if (ch == KEY_LEFT && !check_collision(
-                                  board, (Piece){current_piece.type, current_piece.rotation,
-                                                 current_piece.x - 1, current_piece.y}))
+
+        // Handle piece movement based on user input
+
+        Piece attempt = current_piece; // Create a copy of the current piece to test movement
+        if (ch == KEY_LEFT) attempt.x--;
+        else if (ch == KEY_RIGHT) attempt.x++;
+        else if (ch == KEY_DOWN) attempt.y++;
+        else if (ch == KEY_UP) attempt.rotation = (attempt.rotation + 1) % 4;
+
+        if (!check_collision(board, attempt))
         {
-            current_piece.x--;
-            board_changed = true;
-        }
-        else if (ch == KEY_RIGHT && !check_collision(
-                                        board, (Piece){current_piece.type, current_piece.rotation,
-                                                       current_piece.x + 1, current_piece.y}))
-        {
-            current_piece.x++;
-            board_changed = true;
-        }
-        else if (ch == KEY_DOWN && !check_collision(
-                                       board, (Piece){current_piece.type, current_piece.rotation,
-                                                      current_piece.x, current_piece.y + 1}))
-        {
-            current_piece.y++;
-            board_changed = true;
-        }
-        else if (ch == KEY_UP && !check_collision(
-                                     board, (Piece){current_piece.type,
-                                                    (current_piece.rotation + 1) % 4,
-                                                    current_piece.x, current_piece.y}))
-        { // Rotate right
-            current_piece.rotation = (current_piece.rotation + 1) % 4;
+            current_piece = attempt; // Update the current piece if the movement is valid
             board_changed = true;
         }
 
