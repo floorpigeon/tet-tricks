@@ -206,11 +206,12 @@ int main(void) {
     noecho(); //don't echo input characters
     keypad(stdscr, TRUE); //allow input with arrow keys
     nodelay(stdscr, TRUE); //make getch not block frame updates
+    srand(time(NULL)); //seed random number generator
 
     bool running = true;
 
     int board[ROWS][COLUMNS] = {0}; //initialise board array
-    Piece current_piece = {0, 0, COLUMNS / 2 - 1, 0}; //initialise piece in the middle top of the board
+    Piece current_piece = {rand() % 7, 0, COLUMNS / 2 - 1, 0}; //initialise piece in the middle top of the board
 
     //placing a block
     //board[5][5] = 1;
