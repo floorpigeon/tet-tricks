@@ -77,7 +77,7 @@ int check_collision(int board[ROWS][COLUMNS], Piece piece)
     return 0; // No collision
 }
 
-void render_board(int board[ROWS][COLUMNS], Piece current_piece)
+void render_board(int board[ROWS][COLUMNS], Piece current)
 {
     // clear screen so old frames are not in the way
     erase();
@@ -103,10 +103,10 @@ void render_board(int board[ROWS][COLUMNS], Piece current_piece)
     {
         for (int px = 0; px < 4; px++)
         {
-            if (pieces[current_piece.type][current_piece.rotation][py][px])
+            if (pieces[current.type][current.rotation][py][px])
             {
-                int board_x = current_piece.x + px;
-                int board_y = current_piece.y + py;
+                int board_x = current.x + px;
+                int board_y = current.y + py;
                 if (board_x >= 0 && board_x < COLUMNS && board_y >= 0 && board_y < ROWS)
                 {
                     mvprintw(board_y, board_x * 2, "[]");
@@ -130,7 +130,7 @@ int main(void)
     bool running = true;
 
     int board[ROWS][COLUMNS] = {0}; // initialise board array
-    Piece current_piece = {rand() % 7, 0, COLUMNS / 2 - 1,
+    Piece current = {rand() % 7, 0, COLUMNS / 2 - 1,
                            0}; // initialise piece in the middle top of the board
 
     bool board_changed = true;
@@ -140,10 +140,10 @@ int main(void)
     {
         if (board_changed)
         {
-            render_board(board, current_piece);
+            render_board(board, current);
             board_changed = false; // reset the flag after rendering
         }
-        else if (current_piece.y >= 0 && check_collision(board, current_piece))
+        else if (current.y >= 0 && check_collision(board, current))
         {
             // If the piece collides immediately after moving down, it means it
             // has landed Place the piece on the board
@@ -151,11 +151,11 @@ int main(void)
             {
                 for (int px = 0; px < 4; px++)
                 {
-                    if (pieces[current_piece.type][current_piece.rotation][py]
+                    if (pieces[current.type][current.rotation][py]
                               [px])
                     {
-                        int board_x = current_piece.x + px;
-                        int board_y = current_piece.y + py - 1; // Place piece one row above the
+                        int board_x = current.x + px;
+                        int board_y = current.y + py - 1; // Place piece one row above the
                                                                 // collision point
                         if (board_x >= 0 && board_x < COLUMNS && board_y >= 0 && board_y < ROWS)
                         {
@@ -165,10 +165,10 @@ int main(void)
                 }
             }
             // Spawn a new piece at the top
-            current_piece.type = rand() % 7;
-            current_piece.rotation = 0;
-            current_piece.x = COLUMNS / 2 - 1;
-            current_piece.y = 0;
+            current.type = rand() % 7;
+            current.rotation = 0;
+            current.x = COLUMNS / 2 - 1;
+            current.y = 0;
             board_changed = true;
         }
         int ch = getch();
@@ -180,7 +180,7 @@ int main(void)
 
         // Handle piece movement based on user input
 
-        Piece attempt = current_piece; // Create a copy of the current piece to test movement
+        Piece attempt = current; // Create a copy of the current piece to test movement
         if (ch == KEY_LEFT) attempt.x--;
         else if (ch == KEY_RIGHT) attempt.x++;
         else if (ch == KEY_DOWN) attempt.y++;
@@ -188,7 +188,7 @@ int main(void)
 
         if (!check_collision(board, attempt))
         {
-            current_piece = attempt; // Update the current piece if the movement is valid
+            current = attempt; // Update the current piece if the movement is valid
             board_changed = true;
         }
 
@@ -196,7 +196,7 @@ int main(void)
         time_t current_time = time(NULL);
         if (current_time - last_move_time >= 1)
         {
-            current_piece.y++;
+            current.y++;
             board_changed = true;
             last_move_time = current_time;
         }
