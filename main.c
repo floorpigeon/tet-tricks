@@ -171,12 +171,6 @@ int main(void)
     int board[ROWS][COLUMNS] = {0}; // initialise board array
     Piece current = {rand() % 7, 0, COLUMNS / 2 - 1, 0}; // initialise piece in the middle top of the board
 
-    // Check if piece immediately collides at spawn position (game over condition) This does not work, I don't know why.
-    if (check_collision(board, current))
-    {
-        end_game();
-    }
-
     bool board_changed = true;
     time_t last_move_time = time(NULL);
 
@@ -214,6 +208,12 @@ int main(void)
             current.rotation = 0;
             current.x = COLUMNS / 2 - 1;
             current.y = 0;
+
+            // Check if the new piece immediately collides at spawn position (game over condition)
+            if (check_collision(board, current))
+            {
+                end_game();
+            }
             board_changed = true;
         }
 
