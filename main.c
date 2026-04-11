@@ -117,6 +117,45 @@ void render_board(int board[ROWS][COLUMNS], Piece current)
     refresh(); // updates the screen
 }
 
+void clear_lines(int board[ROWS][COLUMNS])
+{
+    for (int y = 0; y < ROWS; y++)
+    {
+        bool full_line = true;
+        for (int x = 0; x < COLUMNS; x++)
+        {
+            if (board[y][x] == 0)
+            {
+                full_line = false;
+                break;
+            }
+        }
+        if (full_line)
+        {
+            // Move all lines above down
+            for (int ty = y; ty > 0; ty--)
+            {
+                for (int tx = 0; tx < COLUMNS; tx++)
+                {
+                    board[ty][tx] = board[ty - 1][tx];
+                }
+            }
+            // Clear the top line
+            for (int tx = 0; tx < COLUMNS; tx++)
+            {
+                board[0][tx] = 0;
+            }
+        }
+    }
+}
+
+void end_game()
+{
+    endwin(); // End ncurses mode
+    printf("Game Over!\n");
+    exit(0);
+}
+
 int main(void)
 {
     initscr();             // initialise ncurses
@@ -130,8 +169,13 @@ int main(void)
     bool running = true;
 
     int board[ROWS][COLUMNS] = {0}; // initialise board array
-    Piece current = {rand() % 7, 0, COLUMNS / 2 - 1,
-                           0}; // initialise piece in the middle top of the board
+    Piece current = {rand() % 7, 0, COLUMNS / 2 - 1, 0}; // initialise piece in the middle top of the board
+
+    // Check if piece immediately collides at spawn position (game over condition) This does not work, I don't know why.
+    if (check_collision(board, current))
+    {
+        end_game();
+    }
 
     bool board_changed = true;
     time_t last_move_time = time(NULL);
@@ -140,6 +184,7 @@ int main(void)
     {
         if (board_changed)
         {
+            clear_lines(board); // Clear any completed lines before rendering
             render_board(board, current);
             board_changed = false; // reset the flag after rendering
         }
@@ -171,6 +216,7 @@ int main(void)
             current.y = 0;
             board_changed = true;
         }
+
         int ch = getch();
         // Press 'q' to quit the game
         if (ch == 'q')
@@ -220,6 +266,6 @@ int main(void)
         usleep(1000); // Sleep for 50 milliseconds to reduce CPU usage
 #endif
     }
-    endwin();
+    end_game();
     return 0;
 }
